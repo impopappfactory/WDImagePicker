@@ -23,7 +23,7 @@ import UIKit
     open var imagePickerController: UIImagePickerController {
         return _imagePickerController
     }
-    
+
     override public init() {
         super.init()
 
@@ -31,6 +31,18 @@ import UIKit
         _imagePickerController = UIImagePickerController()
         _imagePickerController.delegate = self
         _imagePickerController.sourceType = .photoLibrary
+
+        NotificationCenter.default.addObserver(self, selector: #selector(cameraChanged(_:)), name: NSNotification.Name(rawValue: "AVCaptureDeviceDidStartRunningNotification"), object: nil)
+    }
+
+    @objc func cameraChanged(_ notification: NSNotification) {
+        guard _imagePickerController.sourceType == .camera else { return }
+        if(_imagePickerController.cameraDevice == .front) {
+            self.imagePickerController.cameraViewTransform = CGAffineTransform.identity
+            self.imagePickerController.cameraViewTransform = self.imagePickerController.cameraViewTransform.scaledBy(x: -1, y: 1)
+        } else {
+            self.imagePickerController.cameraViewTransform = CGAffineTransform.identity
+        }
     }
 
     fileprivate func hideController() {
@@ -57,4 +69,10 @@ import UIKit
     func imageCropController(_ imageCropController: WDImageCropViewController, didFinishWithCroppedImage croppedImage: UIImage) {
         self.delegate?.imagePicker?(self, pickedImage: croppedImage)
     }
+
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
 }

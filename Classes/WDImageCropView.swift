@@ -77,6 +77,7 @@ internal class WDImageCropView: UIView, UIScrollViewDelegate {
                     self.cropOverlayView = WDImageCropOverlayView(frame: self.bounds)
                 }
                 self.cropOverlayView.cropSize = newValue
+
                 self.addSubview(self.cropOverlayView)
             }
         }
@@ -86,7 +87,7 @@ internal class WDImageCropView: UIView, UIScrollViewDelegate {
         super.init(frame: frame)
 
         self.isUserInteractionEnabled = true
-        self.backgroundColor = UIColor.black
+        self.backgroundColor = UIColor.clear
         self.scrollView = ScrollView(frame: frame)
         self.scrollView.showsHorizontalScrollIndicator = false
         self.scrollView.showsVerticalScrollIndicator = false
@@ -98,12 +99,11 @@ internal class WDImageCropView: UIView, UIScrollViewDelegate {
 
         self.imageView = UIImageView(frame: self.scrollView.frame)
         self.imageView.contentMode = .scaleAspectFit
-        self.imageView.backgroundColor = UIColor.black
+        self.imageView.backgroundColor = UIColor.clear
         self.scrollView.addSubview(self.imageView)
-
-        self.scrollView.minimumZoomScale =
-            self.scrollView.frame.width / self.scrollView.frame.height
-        self.scrollView.maximumZoomScale = 20
+        self.scrollView.minimumZoomScale = 1
+            //self.scrollView.frame.width / self.scrollView.frame.height
+        self.scrollView.maximumZoomScale = 1
         self.scrollView.setZoomScale(1.0, animated: false)
     }
 
@@ -156,25 +156,44 @@ internal class WDImageCropView: UIView, UIScrollViewDelegate {
         var factoredHeight: CGFloat = 0
         var factoredWidth: CGFloat = 0
 
+        let maximumImageHeight: CGFloat = 1000
+        let maximumImageWidth: CGFloat = 781.25
+        let maximumZoom: CGFloat
+
         if width > height {
-            factor = width / size.width
-            factoredWidth = size.width
-            factoredHeight =  height / factor
-        } else {
-            factor = height / size.height
+            factor = height / cropSize.height
             factoredWidth = width / factor
-            factoredHeight = size.height
+            factoredHeight = cropSize.height
+            maximumZoom = self.imageToCrop!.size.height / maximumImageHeight
+        } else {
+            factor = width / cropSize.width
+            factoredWidth = cropSize.width
+            factoredHeight =  height / factor
+            maximumZoom = self.imageToCrop!.size.width / maximumImageWidth
         }
 
         self.cropOverlayView.frame = self.bounds
         self.scrollView.frame = CGRect(x: xOffset, y: yOffset, width: size.width, height: size.height)
-        self.scrollView.contentSize = CGSize(width: size.width, height: size.height)
-        self.imageView.frame = CGRect(x: 0, y: floor((size.height - factoredHeight) * 0.5),
-            width: factoredWidth, height: factoredHeight)
+        self.scrollView.contentSize = CGSize(width: factoredWidth, height: factoredHeight)
+        if let _ = self.imageToCrop {
+            self.scrollView.maximumZoomScale = maximumZoom
+        }
+        self.imageView.frame = CGRect(x: floor((size.width - factoredWidth) * 0.5),
+                                      y: floor((size.height - factoredHeight) * 0.5),
+                                      width: factoredWidth, height: factoredHeight)
     }
 
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.imageView
+    }
+
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        var visibleRect = resizableCropArea ?
+            calcVisibleRectForResizeableCropArea() : calcVisibleRectForCropArea()
+
+        // transform visible rect to image orientation
+        let rectTransform = orientationTransformedRectOfImage(imageToCrop!)
+        visibleRect = visibleRect.applying(rectTransform)
     }
 
     func croppedImage() -> UIImage {
@@ -197,8 +216,8 @@ internal class WDImageCropView: UIView, UIScrollViewDelegate {
     fileprivate func calcVisibleRectForResizeableCropArea() -> CGRect {
         let resizableView = cropOverlayView as! WDResizableCropOverlayView
 
-        // first of all, get the size scale by taking a look at the real image dimensions. Here it 
-        // doesn't matter if you take the width or the hight of the image, because it will always 
+        // first of all, get the size scale by taking a look at the real image dimensions. Here it
+        // doesn't matter if you take the width or the hight of the image, because it will always
         // be scaled in the exact same proportion of the real image
         var sizeScale = self.imageView.image!.size.width / self.imageView.frame.size.width
         sizeScale *= self.scrollView.zoomScale
@@ -228,11 +247,23 @@ internal class WDImageCropView: UIView, UIScrollViewDelegate {
                 min(scaleWidth, scaleHeight) :
                 max(scaleWidth, scaleHeight)
         }
+        var visibleRect = CGRect.zero
+        visibleRect.origin = scrollView.contentOffset
+        visibleRect.size = scrollView.bounds.size
 
-        // extract visible rect from scrollview and scale it
-        var visibleRect = scrollView.convert(scrollView.bounds, to:imageView)
-        visibleRect = WDImageCropView.scaleRect(visibleRect, scale: scale)
+        let relativeX = visibleRect.origin.x / self.imageView.frame.size.width
+        let relativeY = visibleRect.origin.y / self.imageView.frame.size.height
+        let relativeWidth = visibleRect.width / self.imageView.frame.size.width
+        let relativeHeight = visibleRect.height / self.imageView.frame.size.height
 
+        let visibleWidth = self.imageToCrop!.size.width * relativeWidth
+        let visibleHeight = self.imageToCrop!.size.height * relativeHeight
+        visibleRect = CGRect(
+            x: self.imageToCrop!.size.width * relativeX,
+            y: self.imageToCrop!.size.height * relativeY,
+            width: visibleWidth,
+            height: visibleHeight
+        )
         return visibleRect
     }
 
