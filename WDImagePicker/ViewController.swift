@@ -65,7 +65,7 @@ class ViewController: UIViewController, WDImagePickerDelegate, UIImagePickerCont
             CGRect(x: 20, y: self.resizableButton.frame.maxY + 20, width: self.view.bounds.width - 40, height: self.view.bounds.height - 20 - (self.resizableButton.frame.maxY + 20))
     }
 
-    func showPicker(_ button: UIButton) {
+    @objc func showPicker(_ button: UIButton) {
         self.imagePicker = WDImagePicker()
         self.imagePicker.cropSize = CGSize(width: 280, height: 280)
         self.imagePicker.delegate = self
@@ -78,7 +78,7 @@ class ViewController: UIViewController, WDImagePickerDelegate, UIImagePickerCont
         }
     }
 
-    func showNormalPicker(_ button: UIButton) {
+    @objc func showNormalPicker(_ button: UIButton) {
         self.imagePickerController = UIImagePickerController()
         self.imagePickerController.sourceType = .photoLibrary
         self.imagePickerController.delegate = self
@@ -92,7 +92,7 @@ class ViewController: UIViewController, WDImagePickerDelegate, UIImagePickerCont
         }
     }
 
-    func showResizablePicker(_ button: UIButton) {
+    @objc func showResizablePicker(_ button: UIButton) {
         self.imagePicker = WDImagePicker()
         self.imagePicker.cropSize = CGSize(width: 280, height: 280)
         self.imagePicker.delegate = self

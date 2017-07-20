@@ -241,11 +241,11 @@ internal class WDImageCropView: UIView, UIScrollViewDelegate {
 
         switch image.imageOrientation {
         case .left:
-            rectTransform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2)).translatedBy(x: 0, y: -image.size.height)
+            rectTransform = CGAffineTransform(rotationAngle: CGFloat(Float.pi/2)).translatedBy(x: 0, y: -image.size.height)
         case .right:
-            rectTransform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2)).translatedBy(x: -image.size.width, y: 0)
+            rectTransform = CGAffineTransform(rotationAngle: CGFloat(-Float.pi/2)).translatedBy(x: -image.size.width, y: 0)
         case .down:
-            rectTransform = CGAffineTransform(rotationAngle: CGFloat(-M_PI)).translatedBy(x: -image.size.width, y: -image.size.height)
+            rectTransform = CGAffineTransform(rotationAngle: CGFloat(-Float.pi)).translatedBy(x: -image.size.width, y: -image.size.height)
         default:
             rectTransform = CGAffineTransform.identity
         }

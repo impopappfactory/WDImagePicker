@@ -52,11 +52,11 @@ internal class WDImageCropViewController: UIViewController {
             width: self.view.frame.size.width, height: 54)
     }
 
-    func actionCancel(_ sender: AnyObject) {
+    @objc func actionCancel(_ sender: AnyObject) {
         self.navigationController?.popViewController(animated: true)
     }
 
-    func actionUse(_ sender: AnyObject) {
+    @objc func actionUse(_ sender: AnyObject) {
         croppedImage = self.imageCropView.croppedImage()
         self.delegate?.imageCropController(self, didFinishWithCroppedImage: croppedImage)
     }
