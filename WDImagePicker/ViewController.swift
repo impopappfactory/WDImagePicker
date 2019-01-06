@@ -26,20 +26,20 @@ class ViewController: UIViewController, WDImagePickerDelegate, UIImagePickerCont
         self.customCropButton.frame = UIDevice.current.userInterfaceIdiom == .pad ?
             CGRect(x: 20, y: 20, width: 220, height: 44) :
             CGRect(x: 20, y: self.customCropButton.frame.maxY + 20 , width: self.view.bounds.width - 40, height: 44)
-        self.customCropButton.setTitleColor(self.view.tintColor, for: UIControlState())
-        self.customCropButton.setTitle("Custom Crop", for: UIControlState())
+        self.customCropButton.setTitleColor(self.view.tintColor, for: UIControl.State())
+        self.customCropButton.setTitle("Custom Crop", for:UIControl.State())
         self.customCropButton.addTarget(self, action: #selector(ViewController.showPicker(_:)), for: .touchUpInside)
         self.view.addSubview(self.customCropButton)
 
         self.normalCropButton = UIButton()
-        self.normalCropButton.setTitleColor(self.view.tintColor, for: UIControlState())
-        self.normalCropButton.setTitle("Apple's Build In Crop", for: UIControlState())
+        self.normalCropButton.setTitleColor(self.view.tintColor, for: UIControl.State())
+        self.normalCropButton.setTitle("Apple's Build In Crop", for: UIControl.State())
         self.normalCropButton.addTarget(self, action: #selector(ViewController.showNormalPicker(_:)), for: .touchUpInside)
         self.view.addSubview(self.normalCropButton)
 
         self.resizableButton = UIButton()
-        self.resizableButton.setTitleColor(self.view.tintColor, for: UIControlState())
-        self.resizableButton.setTitle("Resizable Custom Crop", for: UIControlState())
+        self.resizableButton.setTitleColor(self.view.tintColor, for:UIControl.State())
+        self.resizableButton.setTitle("Resizable Custom Crop", for: UIControl.State())
         self.resizableButton.addTarget(self, action: #selector(ViewController.showResizablePicker(_:)), for: .touchUpInside)
         self.view.addSubview(self.resizableButton)
 

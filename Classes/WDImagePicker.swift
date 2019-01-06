@@ -45,9 +45,9 @@ import UIKit
         }
     }
 
-    open func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let cropController = WDImageCropViewController()
-        cropController.sourceImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+    open func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info:[UIImagePickerController.InfoKey : Any]) {
+        let cropController = WDImageCropViewController()    
+        cropController.sourceImage = info[.originalImage] as? UIImage
         cropController.resizableCropArea = self.resizableCropArea
         cropController.cropSize = self.cropSize
         cropController.delegate = self

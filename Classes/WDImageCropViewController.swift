@@ -81,9 +81,9 @@ internal class WDImageCropViewController: UIViewController {
         self.cancelButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         self.cancelButton.titleLabel?.shadowOffset = CGSize(width: 0, height: -1)
         self.cancelButton.frame = CGRect(x: 0, y: 0, width: 58, height: 30)
-        self.cancelButton.setTitle("Cancel", for: UIControlState())
+        self.cancelButton.setTitle("Cancel", for: UIControl.State())
         self.cancelButton.setTitleShadowColor(
-            UIColor(red: 0.118, green: 0.247, blue: 0.455, alpha: 1), for: UIControlState())
+            UIColor(red: 0.118, green: 0.247, blue: 0.455, alpha: 1), for: UIControl.State())
         self.cancelButton.addTarget(self, action: #selector(actionCancel), for: .touchUpInside)
     }
 
@@ -92,9 +92,9 @@ internal class WDImageCropViewController: UIViewController {
         self.useButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         self.useButton.titleLabel?.shadowOffset = CGSize(width: 0, height: -1)
         self.useButton.frame = CGRect(x: 0, y: 0, width: 58, height: 30)
-        self.useButton.setTitle("Use", for: UIControlState())
+        self.useButton.setTitle("Use", for: UIControl.State())
         self.useButton.setTitleShadowColor(
-            UIColor(red: 0.118, green: 0.247, blue: 0.455, alpha: 1), for: UIControlState())
+            UIColor(red: 0.118, green: 0.247, blue: 0.455, alpha: 1), for: UIControl.State())
         self.useButton.addTarget(self, action: #selector(actionUse), for: .touchUpInside)
     }
 

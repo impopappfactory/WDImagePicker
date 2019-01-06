@@ -92,7 +92,7 @@ internal class WDImageCropView: UIView, UIScrollViewDelegate {
         self.scrollView.showsVerticalScrollIndicator = false
         self.scrollView.delegate = self
         self.scrollView.clipsToBounds = false
-        self.scrollView.decelerationRate = 0
+        self.scrollView.decelerationRate = UIScrollView.DecelerationRate(rawValue: 0)
         self.scrollView.backgroundColor = UIColor.clear
         self.addSubview(self.scrollView)
 
